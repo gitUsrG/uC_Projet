@@ -49,6 +49,12 @@ The project will be versioned and maintained collaboratively on GitHub @GitHub, 
 
 == SCD30
 
+#figure(
+  caption: [SCD30 Pins]
+)[
+#image("../IMG/scd30Pins.jpg", width: 50%)
+]
+
 == LEDs
 
 #figure(
