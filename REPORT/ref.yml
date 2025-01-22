@@ -1,0 +1,11 @@
+SCD30:
+    type: Web
+    title: "SCD30" 
+    url: "https://sensirion.com/products/catalog/SCD30"
+    date: "2025-01-22"
+
+GitHub:
+    type: Web
+    title: "GitHub" 
+    url: "https://github.com/gitUsrG/uC_Projet"
+    date: "2025-01-22"
