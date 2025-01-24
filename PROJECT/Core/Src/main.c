@@ -115,7 +115,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         data[3] = '\0';                         // Properly terminate the string
 
         char* endPtr;
-        long value = strtol(data, &endPtr, 10); // Convert the numeric value
+        float value = strtol(data, &endPtr, 10); // Convert the numeric value
         value = value / 10.0;
         if (*endPtr == '\0') // Check if the conversion is valid
         {
