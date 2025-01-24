@@ -1,5 +1,5 @@
-scd30/Src/sensirion_hw_i2c_implementation.o: \
- ../scd30/Src/sensirion_hw_i2c_implementation.c \
+SCD30/Src/sensirion_hw_i2c_implementation.o: \
+ ../SCD30/Src/sensirion_hw_i2c_implementation.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -30,9 +30,9 @@ scd30/Src/sensirion_hw_i2c_implementation.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_i2c.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_i2c.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -63,6 +63,6 @@ scd30/Src/sensirion_hw_i2c_implementation.o: \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_i2c.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_i2c.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h:

@@ -25,13 +25,30 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdlib.h>
-#include <string.h>
+#include "pwm.h"
+
+#include "pid_controller_config.h"
+
 #include "scd30.h"
+#include "scd30_app.h"
+
+#include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+
+typedef struct {
+  float measurement;
+  float reference;
+  float control;
+} SWV_TypeDef;
+
+
+
+
 
 /* USER CODE END PTD */
 
@@ -49,17 +66,26 @@
 
 /* USER CODE BEGIN PV */
 
-uint16_t dutyCycle = 500;
+float setpoint = 35.0f;
+float duty = 50.0f;
 
-
-
-float co2_ppm, temperature, relative_humidity;
-int16_t err;
 uint16_t interval_in_seconds = 2;
-char txbuff[200];
 
-uint8_t rxBuffer[4] = {0};
+uint8_t rxBuffer[5] = {0};
+char txBuffer[256];
 
+
+PWM_Handle_TypeDef PWM1_CH1={
+		.Timer = &htim1,
+		.Channel = TIM_CHANNEL_1,
+		.Duty = 50.0f
+};
+
+SWV_TypeDef swv={
+		.reference = 35.0f,
+		.measurement = 0.0f,
+		.control = 50.0f
+};
 
 /* USER CODE END PV */
 
@@ -72,35 +98,43 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void UART2_SendString(char* str) {
-    HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
-}
-
-void SetDutyCycle(uint8_t dutyCycle) {
-    uint32_t compareValue = (dutyCycle * 10);
-    if(compareValue > 1000) compareValue = 1000;
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, compareValue);
-}
-
+//void UART2_SendString(char* str) {
+//    HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
+//}
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART2)
     {
+        rxBuffer[sizeof(rxBuffer) - 1] = '\0';  // Ensure the buffer is null-terminated
+        char prefix = rxBuffer[0];              // The first character indicates the command type (P or T)
+        char data[4] = {0};                     // Array to store numeric data
 
- //   		  if(HAL_UART_Receive(&huart2, rxBuffer, sizeof(rxBuffer)-1, HAL_MAX_DELAY) == HAL_OK){
-    	rxBuffer[sizeof(rxBuffer) - 1] = '\0';
-    	char* endPtr;
-    	long dutyCycle = strtol((char*)rxBuffer, &endPtr, 10);
+        // Extract numeric data after the prefix
+        strncpy(data, (char*)rxBuffer + 1, 3);  // Copy the 3 characters following the prefix
+        data[3] = '\0';                         // Properly terminate the string
 
-    	if (*endPtr == '\0' && dutyCycle >= 0 && dutyCycle <= 100)
-    	{
-    		SetDutyCycle((uint8_t)dutyCycle);
-    	}
+        char* endPtr;
+        long value = strtol(data, &endPtr, 10); // Convert the numeric value
+        value = value / 10.0;
+        if (*endPtr == '\0') // Check if the conversion is valid
+        {
+            if (prefix == 'P' && value >= 0 && value <= 100)  // PWM command
+            {
+                PWM_WriteDuty(&PWM1_CH1,  value);    // Apply the PWM command
+
+            }
+            else if (prefix == 'T' && value >= 0 && value <= 100) // Temperature command
+            {
+                setpoint = value;  // Divide by 10 to get the temperature in °C
+                swv.reference = value;
+            }
+        }
+
+        // Reactivate UART reception
+        HAL_UART_Receive_IT(&huart2, rxBuffer, sizeof(rxBuffer) - 1);
     }
-    HAL_UART_Receive_IT(&huart2, rxBuffer, sizeof(rxBuffer)-1);
 }
-
 
 /* USER CODE END 0 */
 
@@ -139,29 +173,17 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 
+  //----------- INITIALISATION -----------//
   HAL_UART_Receive_IT(&huart2, rxBuffer, sizeof(rxBuffer)-1);
 
+  PWM_Init(&PWM1_CH1);
 
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutyCycle);
+  PID_Init(&hpid1);
 
-
-
-  /* Initialize I2C */
   sensirion_i2c_init();
-  /* Busy loop for initialization, because the main loop does not work without
-   * a sensor.
-   */
+  scd_Setup();
+  //----------- ------------- -----------//
 
-    while (scd30_probe() != NO_ERROR) {
-  	  UART2_SendString("SCD30 sensor probing failed\n");
-        sensirion_sleep_usec(1000000u);
-    }
-    UART2_SendString("SCD30 sensor probing successful\n");
-
-    scd30_set_measurement_interval(interval_in_seconds);
-    sensirion_sleep_usec(20000u);
-    scd30_start_periodic_measurement(0);
 
   /* USER CODE END 2 */
 
@@ -169,52 +191,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  uint16_t data_ready = 0;
-	        uint16_t timeout = 0;
+	  float co2_ppm = 0.0f;
+	  float temperature = 0.0f;
+	  float relative_humidity = 0.0f;
 
-	        /* Poll data_ready flag until data is available. Allow 20% more than
-	         * the measurement interval to account for clock imprecision of the
-	         * sensor.
-	         */
-	        for (timeout = 0; (100000 * timeout) < (interval_in_seconds * 1500000); ++timeout) {  // Augmenter le délai d'attente
-	            err = scd30_get_data_ready(&data_ready);
-	            if (err != NO_ERROR) {
-	                sprintf(txbuff, "Error reading data_ready flag: %i\n", err);
-	                UART2_SendString(txbuff);
-	                break;  // Sortir de la boucle en cas d'erreur
-	            }
-	            if (data_ready) {
-	                break;
-	            }
-	            sensirion_sleep_usec(100000);  // Attente de 100ms avant de re-vérifier
-	        }
+	  int8_t result = scd_WaitForAndReadSensorData(
+			  interval_in_seconds,
+			  &co2_ppm, &temperature,
+			  &relative_humidity);
 
+	  if (result != 0) {
+		  printf("Error: Failed to retrieve sensor data. Retrying...\n");
+		  HAL_Delay(interval_in_seconds*1000); 				// Wait before retrying
+	      continue;
+	  }
+	  //----------- PID COMPUTING -----------//
 
-	        if (!data_ready) {
-	            UART2_SendString("Timeout waiting for data_ready flag\n");
-	            continue;
-	        }
+	  duty = PID_GetOutput(&hpid1, setpoint, temperature);	// Compute the new PWM value
+	  PWM_WriteDuty(&PWM1_CH1, duty);						// Set the new PWM
 
-	        /* Measure co2, temperature and relative humidity and store into
-	         * variables.
-	         */
-	        err = scd30_read_measurement(&co2_ppm, &temperature, &relative_humidity);
-	        if (err != NO_ERROR) {
-	            UART2_SendString("Error reading measurement\n");
+	  //----------- ------------- -----------//
 
-	        } else {
-	            sprintf(txbuff, "Measured CO2 concentration: %.2f ppm, "
-	                   "Measured temperature: %.2f degC, "
-	                   "Measured humidity: %.2f %%RH\r\n",
-	                   co2_ppm, temperature,relative_humidity);
-	            UART2_SendString(txbuff);
-	        }
+	  swv.control = duty;
+	  swv.measurement = temperature;
 
-	        HAL_Delay(2000);  // Attente de 2 secondes avant la prochaine lecture
+	  HAL_Delay(10);
 
+	  sprintf(txBuffer,"Duty : %0.2f, "
+			  "Set point [degC] : %0.2f, "
+			  "Current [degC] : %0.2f\r\n",
+			  swv.control, swv.reference, swv.measurement
+	   );
+	     UART2_SendString(txBuffer);
 
-
-
+	  HAL_Delay(interval_in_seconds*1000);					// Wait for 2s
 
 
     /* USER CODE END WHILE */
@@ -222,7 +232,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   scd30_stop_periodic_measurement();
-
+  return 0;
   /* USER CODE END 3 */
 }
 

@@ -25,5 +25,7 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
-scd30/Src \
+PID/Src \
+PWM/Src \
+SCD30/Src \
 

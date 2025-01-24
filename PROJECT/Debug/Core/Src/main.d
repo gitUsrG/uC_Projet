@@ -31,10 +31,15 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/scd30.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_common.h \
- C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_i2c.h
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PWM/Inc/pwm.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PID/Inc/pid_controller_config.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PID/Inc/pid_controller.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_common.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_i2c.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30_app.h \
+ C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -71,7 +76,12 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/tim.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/gpio.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/scd30.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_arch_config.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_common.h:
-C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/PWMTemp/scd30/Inc/sensirion_i2c.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PWM/Inc/pwm.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PID/Inc/pid_controller_config.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/PID/Inc/pid_controller.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_arch_config.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_common.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/sensirion_i2c.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30_app.h:
+C:/Users/gabyb/STM32CubeIDE/workspace_1.16.1/Projet/SCD30/Inc/scd30.h:
