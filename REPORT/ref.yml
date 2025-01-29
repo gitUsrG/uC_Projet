@@ -9,3 +9,9 @@ GitHub:
     title: "GitHub" 
     url: "https://github.com/gitUsrG/uC_Projet"
     date: "2025-01-22"
+
+GitHubSCD:
+    type: web
+    title: "SCD30 repository"
+    url: "https://github.com/Sensirion/embedded-i2c-scd30"
+    date: "2025-01-22"
